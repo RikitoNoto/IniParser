@@ -2,7 +2,6 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <stdio.h>
-//MEMO change unistdio.h -> stdio.h
 
 
 struct FileVersion;
@@ -25,6 +24,15 @@ struct FileVersion
     time_t sec;                                     /** time stamp of this file */
     long nsec;                                      /** time stamp of this file(nano sec) */
 };
+/**
+ * @struct FileVersion
+ * @brief this struct record file version by file change time.
+ * @details
+ * this struct is for A ConfigFile structure.
+ * When make a ConfigFile this struct is made.
+ * Then recorded the last changed time of file by the stat system call.
+*/
+
 
 struct ConfigFile
 {
@@ -33,6 +41,14 @@ struct ConfigFile
     off_t content_size;                             /** file size that is got by a system call of stat */
     ConfigSection* sections;                        /** section array in this ini file */
 };
+/**
+ * @struct ConfigFile
+ * @brief A ini file structure.
+ * @details
+ * this struct express a ini file.
+ * this structure has multiple ConfigSection structures and one FileVersion structure.
+ * sections stored in line order.
+*/
 
 struct ConfigSection
 {
@@ -45,6 +61,14 @@ struct ConfigSection
     ConfigOption* options;                          /** option array in this section */
     config_options_count_t options_count;           /** option array size */
 };
+/**
+ * @struct ConfigSection
+ * @brief A section structure in a ini file.
+ * @details
+ * This structure express a section.
+ * This structure has multiple ConfigOption structures and ConfigComment structures.
+ * A order of comments and options is expressed by a "no" member that each structure has.
+*/
 
 struct ConfigOption
 {
@@ -56,6 +80,12 @@ struct ConfigOption
     char* comment;                                  /** option comment */
     config_comment_size_t comment_size;             /** comment size */
 };
+/**
+ * @struct ConfigOption
+ * @brief A option structure in a section.
+ * @details
+ * This structure express a option in a section.
+*/
 
 struct ConfigComment
 {
@@ -63,3 +93,9 @@ struct ConfigComment
     char* comment;                                  /** comment */
     config_comment_size_t comment_size;             /** comment size */
 };
+/**
+ * @struct ConfigComment
+ * @brief A comment structure in a line of a section.
+ * @details
+ * This structure express a line comment.
+*/
