@@ -37,9 +37,9 @@ struct FileVersion
 struct ConfigFile
 {
     char* file_name;                                /** file name of this ini file */
-    FileVersion version;                            /** file version that is written by a structure FileVersion */
+    struct FileVersion* version;                            /** file version that is written by a structure FileVersion */
     off_t content_size;                             /** file size that is got by a system call of stat */
-    ConfigSection* sections;                        /** section array in this ini file */
+    struct ConfigSection** sections;                        /** section array in this ini file */
 };
 /**
  * @struct ConfigFile
@@ -56,9 +56,9 @@ struct ConfigSection
     config_title_size_t title_size;                 /** title size */
     char* comment;                                  /** comment to title(character after ']') */
     config_comment_size_t comment_size;             /** comment size */
-    ConfigComment* comments;                        /** comment array in this section */
+    struct ConfigComment** comments;                        /** comment array in this section */
     config_comments_count_t comments_count;         /** comment array size */
-    ConfigOption* options;                          /** option array in this section */
+    struct ConfigOption** options;                          /** option array in this section */
     config_options_count_t options_count;           /** option array size */
 };
 /**
