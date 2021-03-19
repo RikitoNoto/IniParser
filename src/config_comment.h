@@ -4,7 +4,7 @@
 #include "config_common.h"
 
 
-struct ConfigComment
+struct _ConfigComment
 {
     config_no_in_section_t no;                      /** line no of this comment in this section */
     char* comment;                                  /** comment */

@@ -2,8 +2,10 @@
 #define _CONFIG_OPTION_H
 
 #include "config_common.h"
+#include <stdlib.h>
+#include <string.h>
 
-struct ConfigOption
+typedef struct _ConfigOption
 {
     config_no_in_section_t no;                      /** line no of this option in this section */
     char* title;                                    /** option title */
@@ -20,5 +22,6 @@ struct ConfigOption
  * This structure express a option in a section.
 */
 
-
+ConfigOption* createConfigOption(char* title, config_title_size_t title_size, char* value, config_value_size_t value_size, char* comment, config_comment_size_t comment_size);
+int freeConfigOption(ConfigOption* op);
 #endif // _CONFIG_OPTION_H

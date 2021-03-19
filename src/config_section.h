@@ -4,15 +4,15 @@
 #include "config_common.h"
 
 
-struct ConfigSection
+struct _ConfigSection
 {
     char* title;                                    /** section title that is surrounded '[]' */
     config_title_size_t title_size;                 /** title size */
     char* comment;                                  /** comment to title(character after ']') */
     config_comment_size_t comment_size;             /** comment size */
-    struct ConfigComment** comments;                /** comment array in this section */
+    ConfigComment** comments;                       /** comment array in this section */
     config_comments_count_t comments_count;         /** comment array size */
-    struct ConfigOption** options;                  /** option array in this section */
+    ConfigOption** options;                         /** option array in this section */
     config_options_count_t options_count;           /** option array size */
 };
 /**

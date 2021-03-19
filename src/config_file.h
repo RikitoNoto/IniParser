@@ -8,7 +8,7 @@
 #include <stdio.h>
 
 
-struct FileVersion
+struct _FileVersion
 {
     time_t sec;                                     /** time stamp of this file */
     long nsec;                                      /** time stamp of this file(nano sec) */
@@ -23,12 +23,12 @@ struct FileVersion
 */
 
 
-struct ConfigFile
+struct _ConfigFile
 {
     char* file_name;                                /** file name of this ini file */
-    struct FileVersion* version;                    /** file version that is written by a structure FileVersion */
+    FileVersion* version;                           /** file version that is written by a structure FileVersion */
     off_t content_size;                             /** file size that is got by a system call of stat */
-    struct ConfigSection** sections;                /** section array in this ini file */
+    ConfigSection** sections;                       /** section array in this ini file */
 };
 /**
  * @struct ConfigFile
