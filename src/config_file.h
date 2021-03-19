@@ -29,6 +29,7 @@ struct _ConfigFile
     FileVersion* version;                           /** file version that is written by a structure FileVersion */
     off_t content_size;                             /** file size that is got by a system call of stat */
     ConfigSection** sections;                       /** section array in this ini file */
+    config_array_count_t sections_size;
 };
 /**
  * @struct ConfigFile

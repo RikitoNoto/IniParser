@@ -1,6 +1,6 @@
 #include "config_option.h"
 
-ConfigOption* createConfigOption(char* title, config_title_size_t title_size, char* value, config_value_size_t value_size, char* comment, config_comment_size_t comment_size)
+ConfigOption* createConfigOption(char* title, config_string_size_t title_size, char* value, config_string_size_t value_size, char* comment, config_string_size_t comment_size)
 {
     if(title == NULL || value == NULL) return NULL;
 
