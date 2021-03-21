@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <sys/types.h>
+#include <string.h>
 
 typedef unsigned char config_bool;
 #define CONFIG_TRUE (char)1
@@ -18,7 +19,7 @@ typedef unsigned int config_string_size_t;
 typedef unsigned int config_array_count_t;
 typedef unsigned int config_no_in_section_t;
 
-char* deleteIndent(char* line, config_string_size_t* delete_size, config_string_size_t size);
+char* deleteIndent(char* line, config_string_size_t size, config_string_size_t* delete_size);
 void* mallocConfig(size_t size);
 void* reallocConfig(void *ptr, size_t size);
 char* initializeString(const char* srcstr, config_string_size_t size);

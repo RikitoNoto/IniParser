@@ -9,7 +9,7 @@
 * @details
 * delete indents and spaces from first in a line until other characters.
 */
-char* deleteIndent(char* line, config_string_size_t* delete_size, config_string_size_t size)
+char* deleteIndent(char* line, config_string_size_t size, config_string_size_t* delete_size)
 {
     for(*delete_size = 0; *delete_size < size; (*delete_size)++)
     {
