@@ -70,7 +70,7 @@ static char* searchOptionTitleFromLine(char* line, config_string_size_t line_siz
         {
             if((is_double_quotation
                 &&
-                (line[i]=='\"' && line[i]!='\\')) || (!is_double_quotation && line[i]==' '))
+                (line[i]=='\"' && line[i-1]!='\\')) || (!is_double_quotation && line[i]==' '))
             {
                 if(is_double_quotation) is_double_quotation = CONFIG_FALSE;
 
