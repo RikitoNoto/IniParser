@@ -52,6 +52,25 @@ void* reallocConfig(void* ptr, size_t size)
 }
 
 /**
+ * @brief initialize memory for string.
+ * @param[in] srcstr source string.
+ * @param[in] size source string size.
+ * @details
+ * initialize memory for string.
+ * first allocate memory for string.
+ * next set \0 to memory.
+ * after copy srcstr to memory allocated.
+*/
+char* initializeString(const char* srcstr, config_string_size_t size)
+{
+    char* str = (char*)mallocConfig(sizeof(char)*size);
+    memset(str, '\0', size);
+    strncpy(str, srcstr, size);
+
+    return str;
+}
+
+/**
  * @brief raise error and exit program.
  * @param[in] cause A cause of the error.
  * @param[in] fmt A string describing the error.

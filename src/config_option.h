@@ -5,7 +5,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-typedef struct _ConfigOption
+struct _ConfigOption
 {
     config_no_in_section_t no;                      /** line no of this option in this section */
     char* title;                                    /** option title */
@@ -23,5 +23,5 @@ typedef struct _ConfigOption
 */
 
 ConfigOption* createConfigOption(char* title, config_string_size_t title_size, char* value, config_string_size_t value_size, char* comment, config_string_size_t comment_size);
-int freeConfigOption(ConfigOption* op);
+void freeConfigOption(ConfigOption* op);
 #endif // _CONFIG_OPTION_H
