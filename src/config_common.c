@@ -83,8 +83,7 @@ void raiseConfigError(char* cause, char* fmt, ...)
     va_list ap;
 
     va_start(ap, fmt);
-
-    perror(cause);
+    if(errno) perror(cause);
     vfprintf(stderr, fmt, ap);
 
     va_end(ap);
