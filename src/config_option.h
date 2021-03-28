@@ -1,6 +1,8 @@
 #ifndef _CONFIG_OPTION_H
 #define _CONFIG_OPTION_H
 
+#define CONFIG_OPTION_TEST 1
+
 #include "config_common.h"
 #include <stdlib.h>
 #include <string.h>
@@ -24,4 +26,14 @@ struct _ConfigOption
 
 ConfigOption* createConfigOption(char* title, config_string_size_t title_size, char* value, config_string_size_t value_size, char* comment, config_string_size_t comment_size);
 void freeConfigOption(ConfigOption* op);
+
+static char* searchOptionTitleFromLine(char* line, config_string_size_t line_size, config_string_size_t* title_size, char** value_start_point);
+static char* searchOptionValueFromLine(char* line, config_string_size_t line_size, config_string_size_t* value_size, char** comment_start_point);
+
+#ifdef CONFIG_OPTION_TEST
+char* _searchOptionTitleFromLine(char* line, config_string_size_t line_size, config_string_size_t* title_size, char** value_start_point);
+char* _searchOptionValueFromLine(char* line, config_string_size_t line_size, config_string_size_t* value_size, char** comment_start_point);
+
+#endif
+
 #endif // _CONFIG_OPTION_H

@@ -1,11 +1,23 @@
-config_common_test: ../bin/config_common.o ../bin/config_common_test.o
-	gcc -Wall -g -o ../bin/configCommonTest.o ../bin/config_common_test.o ../bin/config_common.o
+GCC_LINK = gcc -Wall -g -o
+GCC_COMPILE = gcc -Wall -g -c -o $@
+DIR_BIN = ../bin/
+DIR_SRC = ../src/
 
-../bin/config_common.o: ../src/config_common.c
-	gcc -Wall -g -c -o ../bin/config_common.o ../src/config_common.c
 
-../bin/config_common_test.o: config_common.c
-	gcc -Wall -g -c -o ../bin/config_common_test.o config_common.c
+config_common_test: $(DIR_BIN)config_common_test.o $(DIR_BIN)config_common.o
+	$(GCC_LINK) $(DIR_BIN)configCommonTest.o $^
 
-config_option_test: ../src/config_option.c config_option.c ../bin/config_common.o
-	gcc -Wall -g -o ../bin/config_option_test.o config_option.c ../bin/config_common.o
+config_option_test: config_option_test.o $(DIR_BIN)config_common.o $(DIR_BIN)config_option.o
+	$(GCC_LINK) $(DIR_BIN)configOptionTest.o $^
+
+$(DIR_BIN)config_common.o: $(DIR_SRC)config_common.c $(DIR_SRC)config_common.h
+	$(GCC_COMPILE) $(DIR_SRC)config_common.c
+
+$(DIR_BIN)config_common_test.o: config_common.h config_common.c
+	$(GCC_COMPILE) config_common.c
+
+config_option_test.o: config_option.h config_option.c
+	$(GCC_COMPILE) config_option.c
+
+$(DIR_BIN)config_option.o: $(DIR_SRC)config_option.c $(DIR_SRC)config_option.h
+	$(GCC_COMPILE)  $(DIR_SRC)config_option.c

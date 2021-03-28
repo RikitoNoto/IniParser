@@ -61,7 +61,7 @@ static int _searchOptionTitleFromLineTest(char* correct, char* line)
         if(correct[correct_title_size] == '\0') break;
     }
     correct_title_size++;//+1 :null char
-    char* title = searchOptionTitleFromLine(line, line_size, &title_size, value_start_point);
+    char* title = _searchOptionTitleFromLine(line, line_size, &title_size, value_start_point);
     //if strings is same, strcmp return 0.
     return (!strcmp(title, correct) && title_size==correct_title_size);
 }
@@ -86,10 +86,12 @@ static void searchOptionValueFromLineTest()
     while(TEST_TRUE)
     {
         if(lines[i] == NULL) break;
-        char* dest = (char*)mallocConfig(sizeof(char)*sizes[i]);
-        int result = _searchOptionValueFromLineTest(corrects[i], strncpy(dest, lines[i], sizes[i]));
         printf(COLOR_CYAN);
         printf("test%d\n"COLOR_RESET, i);
+        printf(COLOR_CYAN);
+        char* dest = (char*)mallocConfig(sizeof(char)*sizes[i]);
+        int result = _searchOptionValueFromLineTest(corrects[i], strncpy(dest, lines[i], sizes[i]));
+        printf(COLOR_RESET);
 
         printf(COLOR_CYAN"\t<%s == %s>\n", lines[i],corrects[i]);
 
@@ -118,7 +120,9 @@ static int _searchOptionValueFromLineTest(char* correct, char* line)
         if(correct[correct_value_size] == '\0') break;
     }
     correct_value_size++;//+1 :null char
-    char* value = searchOptionTitleFromLine(line, line_size, &value_size, comment_start_point);
+    char* value = _searchOptionValueFromLine(line, line_size, &value_size, comment_start_point);
+    printf("\tvalue:\"%s\"\n", value);
+    printf("\tvalue_size:%d\n", value_size);
     //if strings is same, strcmp return 0.
     return (!strcmp(value, correct) && value_size==correct_value_size);
 }

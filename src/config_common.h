@@ -5,6 +5,7 @@
 #include <stdio.h>
 #include <sys/types.h>
 #include <string.h>
+#include <errno.h>
 
 typedef unsigned char config_bool;
 #define CONFIG_TRUE (char)1

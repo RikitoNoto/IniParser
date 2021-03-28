@@ -2,7 +2,7 @@
 #define _TEST_CONFIG_OPTION_H
 
 #include "config_test.h"
-#include "../src/config_option.c"
+#include "../src/config_option.h"
 #include <string.h>
 
 static void searchOptionTitleFromLineTest();

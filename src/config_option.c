@@ -125,42 +125,45 @@ static char* searchOptionValueFromLine(char* line, config_string_size_t line_siz
         is_double_quotation = CONFIG_TRUE;
     }
 
-    for(*value_size = 0; *value_size < line_size; (*value_size)++)
+    for(int i = 0; i < line_size; i++)
     {
         //if did not discover option value end point
         //and discover end point that is space or tab or double quotation.
         if( !is_value_searched &&
-            ((is_double_quotation && line[*value_size]=="\"" && line[*value_size]!="\\")
+            ((is_double_quotation && line[i]=='\"' && line[i-1]!='\\')
             ||
-            (!is_double_quotation && (line[*value_size] ==' '|| line[*value_size] == '\t'))))
+            (!is_double_quotation && (line[i] ==' '|| line[i] == '\t'))))
         {
             if(is_double_quotation) is_double_quotation = CONFIG_FALSE;
-            line[*value_size] = '\0';
-            (*value_size)++;
+            line[i] = '\0';
+            *value_size = i + 1;
             is_value_searched = CONFIG_TRUE;
         }
         //if discover ';', return a comment start point.
-        else if(!is_double_quotation && (line[*value_size] ==';'))
+        else if(!is_double_quotation && (line[i] ==';'))
         {
             //if did not discover option value end point.
             if(!is_value_searched)
             {
-                line[*value_size] = '\0';
-                (*value_size)++;
+                line[i] = '\0';
+                *value_size = i + 1;
             }
-            *comment_start_point = line[*value_size];
+            *comment_start_point = line[i];
             break;
         }
         //if discover a new line character or null character.
-        else if(!is_double_quotation && (line[*value_size] == '\n' || line[*value_size] == '\r' || line[*value_size] == '\0'))
+        else if(!is_double_quotation && (line[i] == '\n' || line[i] == '\r' || line[i] == '\0'))
         {
-            line[*value_size] = '\0';
-            (*value_size)++;
+            if(!is_value_searched)
+            {
+                line[i] = '\0';
+                *value_size = i + 1;
+            }
             *comment_start_point = NULL;
             break;
         }
 
-        if(*value_size == line_size-1) raiseConfigError(NULL, "invalid context option.\n%s\n", line);
+        if(i == line_size-1) raiseConfigError(NULL, "invalid context option.\n%s\n", line);
     }
     return value;
 }
@@ -178,3 +181,16 @@ void freeConfigOption(ConfigOption* op)
     free(op->comment);
     free(op);
 }
+
+#ifdef CONFIG_OPTION_TEST
+char* _searchOptionTitleFromLine(char* line, config_string_size_t line_size, config_string_size_t* title_size, char** value_start_point)
+{
+    return searchOptionTitleFromLine(line, line_size, title_size, value_start_point);
+}
+
+char* _searchOptionValueFromLine(char* line, config_string_size_t line_size, config_string_size_t* value_size, char** comment_start_point)
+{
+    return searchOptionValueFromLine(line, line_size, value_size, comment_start_point);
+}
+
+#endif
