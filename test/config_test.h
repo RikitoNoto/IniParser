@@ -2,8 +2,9 @@
 #define _TEST_CONFIG_TEST_H
 
 #include "../src/config_common.h"
-#define TEST_TRUE 1
-#define TEST_FALSE 0
+#define CONFIG_TEST_TRUE 1
+#define CONFIG_TEST_FALSE 0
+typedef unsigned char config_test_bool;
 
 #define COLOR_RESET "\033[0m"
 #define COLOR_GREEN "\033[32m"
