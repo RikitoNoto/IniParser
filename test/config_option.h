@@ -12,7 +12,6 @@ static void searchOptionTitleFromLineTest();
 static config_bool _searchOptionTitleFromLineTest(char* correct, char* line);
 static void searchOptionValueFromLineTest();
 static config_bool _searchOptionValueFromLineTest(char* correct, char* line);
-static config_string_size_t getStringSizeForTest(char* str);
 static void printConfigOption(ConfigOption* op, char* prefix, char* suffix);
 
 #endif // _TEST_CONFIG_OPTION_H

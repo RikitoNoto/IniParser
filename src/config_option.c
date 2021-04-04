@@ -4,6 +4,7 @@
 
 /**
  * @brief create config option structure from title and value.
+ * @param[in] no no of this option in a section.
  * @param[in] title A title of this option.
  * @param[in] title_size title array size.
  * @param[in] value A value of this option.
@@ -20,18 +21,21 @@ ConfigOption* createConfigOption(config_no_in_section_t no, char* title, config_
     if(title == NULL || value == NULL) return NULL;
 
     ConfigOption* op = (ConfigOption*)mallocConfig(sizeof(ConfigOption));
-    if(op == NULL) return NULL;
 
     op->no = no;
     op->title = initializeString(title, title_size);
+    op->title_size = title_size;
     op->value = initializeString(value, value_size);
+    op->value_size = value_size;
     op->comment = initializeString(comment, comment_size);
+    op->comment_size = comment_size;
 
     return op;
 }
 
 /**
  * @brief create config option structure from a line.
+ * @param[in] no no of this option in a section.
  * @param[in] line A line of a option in a ini file.
  * @param[in] line_size the line size.
  * @return A ConfigOption structure made from a line.
@@ -61,7 +65,7 @@ ConfigOption* createConfigOptionFromLine(config_no_in_section_t no, char* _line,
     if(comment_start_point != NULL)
     {
         line_size -= comment_start_point - value_start_point;
-        comment = searchOptionCommentFromLine(comment_start_point, line_size, &comment_size);
+        comment = searchCommentFromLine(comment_start_point, line_size, &comment_size);
     }
 
     return createConfigOption(no, title, title_size, value, value_size, comment, comment_size);
@@ -77,7 +81,7 @@ ConfigOption* createConfigOptionFromLine(config_no_in_section_t no, char* _line,
 */
 config_bool configOptionCmp(const ConfigOption* config_option1, const ConfigOption* config_option2, config_bool comment_check)
 {
-    if(!(config_option1->no == config_option2->no)) return CONFIG_FALSE;
+    // if(!(config_option1->no == config_option2->no)) return CONFIG_FALSE;
     if(strcmp(config_option1->title, config_option2->title)) return CONFIG_FALSE;
     if(strcmp(config_option1->value, config_option2->value)) return CONFIG_FALSE;
 
@@ -93,7 +97,7 @@ config_bool configOptionCmp(const ConfigOption* config_option1, const ConfigOpti
  * @brief serch option title and value start point from a line.
  * @param[in] line a line in a ini file for serch.
  * @param[in] line_size the size of the line.
- * @param[out] title_size the size of title returned.
+ * @param[out] title_size the size of returned title.
  * @param[out] value_start_point a start point of value.
  * @return a start point of title in a line.
  * @details
@@ -161,7 +165,7 @@ static char* searchOptionTitleFromLine(char* line, config_string_size_t line_siz
  * @brief serch option value from a line.
  * @param[in] line a line in a ini file for serch.
  * @param[in] line_size the size of the line.
- * @param[out] value_size the size of value returned.
+ * @param[out] value_size the size of returned value.
  * @param[out] comment_start_point a start point of comment.
  * @return a start point of value in a line.
  * @details
@@ -226,34 +230,6 @@ static char* searchOptionValueFromLine(char* line, config_string_size_t line_siz
         if(i == line_size-1) raiseConfigError(NULL, "invalid context option.\n%s\n", line);
     }
     return value;
-}
-
-/**
- * @brief serch option comment from a line.
- * @param[in] line a line in a ini file for serch.
- * @param[in] line_size the size of the line.
- * @param[out] comment_size the size of comment returned.
- * @return a start point of comment in a line.
- * @details
- * search option comment start point.
-*/
-static char* searchOptionCommentFromLine(char* line, config_string_size_t line_size, config_string_size_t* comment_size)
-{
-    char* comment;
-
-    comment = line;
-
-    for(int i = 0; i < line_size; i++)
-    {
-        if(line[i] == '\n' || line[i] == '\r' || line[i] == '\0')
-        {
-            line[i] = '\0';
-            *comment_size = i + 1;
-            break;
-        }
-    }
-
-    return comment;
 }
 
 /**

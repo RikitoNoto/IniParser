@@ -11,6 +11,6 @@ typedef unsigned char config_test_bool;
 #define COLOR_RED "\033[31m"
 #define COLOR_CYAN "\033[36m"
 
-
+config_string_size_t getStringSizeForTest(char* str);
 
 #endif // _TEST_CONFIG_TEST_H

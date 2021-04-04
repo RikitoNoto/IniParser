@@ -4,6 +4,7 @@
 #define CONFIG_OPTION_TEST 0
 
 #include "config_common.h"
+#include "config_comment.h"
 #include <stdlib.h>
 #include <string.h>
 
@@ -33,7 +34,6 @@ void freeConfigOption(ConfigOption* op);
 
 static char* searchOptionTitleFromLine(char* line, config_string_size_t line_size, config_string_size_t* title_size, char** value_start_point);
 static char* searchOptionValueFromLine(char* line, config_string_size_t line_size, config_string_size_t* value_size, char** comment_start_point);
-static char* searchOptionCommentFromLine(char* line, config_string_size_t line_size, config_string_size_t* comment_size);
 
 #endif
 
