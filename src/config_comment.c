@@ -36,6 +36,7 @@ ConfigComment* createConfigCommentFromLine(config_no_in_section_t no, char* _lin
     char* comment;
     config_string_size_t comment_size = 0;
     char* line = mallocConfig(sizeof(char)*line_size);
+    strncpy(line, _line, line_size);
 
     comment = searchCommentFromLine(line, line_size, &comment_size);
     return createConfigComment(no, comment, comment_size);

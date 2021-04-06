@@ -8,7 +8,7 @@ int main(int argc, char* argv[])
 static void createConfigCommentFromLineTest()
 {
     
-    ConfigOption* corrects[4] = {
+    ConfigComment* corrects[4] = {
         createConfigComment(0, "comment", sizeof("comment")),
         createConfigComment(0, " comment", sizeof(" comment")),
         createConfigComment(0, "comment;comment", sizeof("comment;comment")),
