@@ -24,4 +24,7 @@ struct _ConfigSection
  * A order of comments and options is expressed by a "no" member that each structure has.
 */
 
+
+ConfigSection* createConfigSection(const char* title, config_string_size_t title_size, const char* comment, config_string_size_t comment_size, ConfigComment** comments, config_array_count_t comments_count, ConfigOption** options, config_array_count_t options_count);
+
 #endif // _CONFIG_SECTION_H

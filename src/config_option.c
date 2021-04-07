@@ -10,7 +10,7 @@
  * @param[in] value A value of this option.
  * @param[in] value_size value array size.
  * @param[in] comment A comment of this option.
- * @param[in] comment_size comment array size
+ * @param[in] comment_size comment array size.
  * @return A ConfigOption structure made from arguments.
  * @details
  * create ConfigOption structure from arguments.

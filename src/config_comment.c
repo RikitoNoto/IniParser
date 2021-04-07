@@ -90,3 +90,15 @@ config_bool configCommentCmp(const ConfigComment* config_comment1, const ConfigC
 
     return CONFIG_TRUE;
 }
+
+/**
+ * @brief free memory of ConfigComment structure.
+ * @param[in] comment ConfigComment structure.
+ * @details
+ * free memory of ConfigComment structure and its members.
+*/
+void freeConfigComment(ConfigComment* comment)
+{
+    free(comment->comment);
+    free(comment);
+}

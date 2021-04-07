@@ -21,5 +21,6 @@ ConfigComment* createConfigComment(config_no_in_section_t no, char* _comment, co
 ConfigComment* createConfigCommentFromLine(config_no_in_section_t no, char* _line, config_string_size_t line_size);
 char* searchCommentFromLine(char* line, config_string_size_t line_size, config_string_size_t* comment_size);
 config_bool configCommentCmp(const ConfigComment* config_comment1, const ConfigComment* config_comment2);
+void freeConfigComment(ConfigComment* comment);
 
 #endif // _CONFIG_COMMENT_H

@@ -11,7 +11,6 @@ typedef unsigned char config_bool;
 #define CONFIG_TRUE (char)1
 #define CONFIG_FALSE (char)0
 
-typedef struct _FileVersion FileVersion;
 typedef struct _ConfigFile ConfigFile;
 typedef struct _ConfigSection ConfigSection;
 typedef struct _ConfigOption ConfigOption;

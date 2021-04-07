@@ -7,26 +7,10 @@
 #include <sys/types.h>
 #include <stdio.h>
 
-
-struct _FileVersion
-{
-    time_t sec;                                     /** time stamp of this file */
-    long nsec;                                      /** time stamp of this file(nano sec) */
-};
-/**
- * @struct FileVersion
- * @brief this struct record file version by file change time.
- * @details
- * this struct is for A ConfigFile structure.
- * When make a ConfigFile this struct is made.
- * Then recorded the last changed time of file by the stat system call.
-*/
-
-
 struct _ConfigFile
 {
     char* file_name;                                /** file name of this ini file */
-    FileVersion* version;                           /** file version that is written by a structure FileVersion */
+    timespec* version;                              /** file version that is written by a structure FileVersion */
     off_t content_size;                             /** file size that is got by a system call of stat */
     ConfigSection** sections;                       /** section array in this ini file */
     config_array_count_t sections_size;
