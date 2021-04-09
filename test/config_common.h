@@ -6,12 +6,12 @@
 #include <string.h>
 
 
-static void deleteIndentTest(char** corrects, char** lines, config_string_size_t* sizes);
+static void deleteIndentTest();
 
 static int _deleteIndentTest(char* correct, char* line, config_string_size_t size);
-static int _mallocConfigTest(size_t size);
-static int _reallocConfigTest(void *ptr, size_t size);
-static int _raiseConfigErrorTest(char* cause, char* fmt, ...);
 
+static void searchStringFromLineTest();
+static config_bool _searchStringFromLineTest(const ConfigStringInfo* line, ConfigStringInfo* end_chars, ConfigStringInfo* correct);
+static config_bool configStringInfoCmp(const ConfigStringInfo* info1, const ConfigStringInfo* info2);
 
 #endif // _TEST_CONFIG_COMMON_H

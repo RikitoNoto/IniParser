@@ -1,6 +1,54 @@
 #include "config_common.h"
 
 /**
+ * @brief create string info structure from arguments.
+ * @param[in] content A content of this string.
+ * @param[in] length The content length.
+ * @return A ConfigStringInfo structure made from arguments.
+ * @details
+ * create ConfigStringInfo structure from arguments.
+*/
+ConfigStringInfo* createStringInfo(const char* content, config_string_size_t length)
+{
+    ConfigStringInfo* info = (ConfigStringInfo*)mallocConfig(sizeof(ConfigStringInfo));
+    info-> content = initializeString(content, length);
+    info->length = length;
+    return info;
+}
+
+/**
+ * @brief search string based on the given characters from a line.
+ * @param[in] line a line info.
+ * @param[in] end_chars end characters. this structure's content is received as char array, but not string.
+ * @return the string infomation searched.
+ * @details
+ * search string based on the given characters from a line.
+ * if could not find the given characters, raise error and fin program.
+*/
+ConfigStringInfo* searchStringFromLine(const ConfigStringInfo* line, const ConfigStringInfo* end_chars)
+{
+    ConfigStringInfo* info = (ConfigStringInfo*)mallocConfig(sizeof(ConfigStringInfo));
+    info->content = line->content;
+    info->length = 0;
+
+    for(int i = 0; i <line->length; i++)
+    {
+        for(int j=0; j < end_chars->length-1; j++)
+        {
+            if(line->content[i] == end_chars->content[j])
+            {
+                info->length = i+1;
+                break;
+            }
+        }
+
+        if(info->length > 0) break;
+        if(i==line->length-1) raiseConfigError(NULL, "invalid context option.\n%s\n", line->content);
+    }
+    return info;
+}
+
+/**
 * @brief delete indents and spaces from first in a line.
 * @param[in] line a line for delete indents and spaces.
 * @param[out] delete_size count of deleted characters.
@@ -9,7 +57,7 @@
 * @details
 * delete indents and spaces from first in a line until other characters.
 */
-char* deleteIndent(char* line, config_string_size_t size, config_string_size_t* delete_size)
+char* deleteIndent(const char* line, config_string_size_t size, config_string_size_t* delete_size)
 {
     for(*delete_size = 0; *delete_size < size; (*delete_size)++)
     {
@@ -60,12 +108,13 @@ void* reallocConfig(void* ptr, size_t size)
  * first allocate memory for string.
  * next set \0 to memory.
  * after copy srcstr to memory allocated.
+ * this function add null character to the end of string.
 */
 char* initializeString(const char* srcstr, config_string_size_t size)
 {
     char* str = (char*)mallocConfig(sizeof(char)*size);
-    memset(str, '\0', size);
     strncpy(str, srcstr, size);
+    str[size-1] = '\0';
 
     return str;
 }
