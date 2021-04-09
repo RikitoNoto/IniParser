@@ -48,9 +48,15 @@ ConfigSection* createConfigSection(const char* title, config_string_size_t title
  * the comments array and the options array in the structure which created by this function are empty.
  * So if it has comments or options, need to add these.
 */
-ConfigSection* createConfigSectionFromLine(char* line, config_string_size_t line_size)
+ConfigSection* createConfigSectionFromLine(const ConfigStringInfo* line)
 {
 
+
+}
+
+ConfigStringInfo* searchSectionTitle(const ConfigStringInfo* line)
+{
+    // title = deleteIndent(line);
 }
 
 ConfigSection* appEndFromLine(char* line, config_string_size_t line_size)

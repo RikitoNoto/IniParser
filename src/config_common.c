@@ -57,7 +57,7 @@ ConfigStringInfo* searchStringFromLine(const ConfigStringInfo* line, const Confi
 * @details
 * delete indents and spaces from first in a line until other characters.
 */
-char* deleteIndent(const char* line, config_string_size_t size, config_string_size_t* delete_size)
+char* deleteIndent(char* line, config_string_size_t size, config_string_size_t* delete_size)
 {
     for(*delete_size = 0; *delete_size < size; (*delete_size)++)
     {
@@ -66,6 +66,31 @@ char* deleteIndent(const char* line, config_string_size_t size, config_string_si
 
     if(*delete_size == size-1) return NULL;
     return &(line[*delete_size]);
+}
+
+/**
+* @brief delete indents and spaces from first in a line.
+* @param[in] line a line for delete indents and spaces.
+* @param[in] size size of a line.
+* @return start point of a line and the size of the remain line.
+* @details
+* delete indents and spaces from first in a line until other characters.
+*/
+ConfigStringInfo* deleteIndentFromStringInfo(const ConfigStringInfo* line)
+{
+    ConfigStringInfo* info = (ConfigStringInfo*)mallocConfig(sizeof(ConfigStringInfo));
+    for(int i = 0; i < line->length; i++)
+    {
+        if(line->content[i] != ' '&& line->content[i] != '\t')
+        {
+            info->length = line->length - i;
+            info->content = line->content[i];
+            break;
+        }
+        if(i == line->length-1) return NULL;
+    }
+
+    return info;
 }
 
 /**
