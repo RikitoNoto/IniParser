@@ -23,7 +23,7 @@ ConfigStringInfo* createStringInfo(const char* content, config_string_size_t len
  * @return the string infomation searched.
  * @details
  * search string based on the given characters from a line.
- * if could not find the given characters, raise error and fin program.
+ * if could not find the given characters, return Null.
 */
 ConfigStringInfo* searchStringFromLine(const ConfigStringInfo* line, const ConfigStringInfo* end_chars)
 {
@@ -43,7 +43,7 @@ ConfigStringInfo* searchStringFromLine(const ConfigStringInfo* line, const Confi
         }
 
         if(info->length > 0) break;
-        if(i==line->length-1) raiseConfigError(NULL, "invalid context option.\n%s\n", line->content);
+        if(i==line->length-1) return NULL;
     }
     return info;
 }
