@@ -3,7 +3,6 @@
 
 #include "config_common.h"
 
-
 struct _ConfigSection
 {
     char* title;                                    /** section title that is surrounded '[]' */
@@ -25,6 +24,6 @@ struct _ConfigSection
 */
 
 
-ConfigSection* createConfigSection(const char* title, config_string_size_t title_size, const char* comment, config_string_size_t comment_size, ConfigComment** comments, config_array_count_t comments_count, ConfigOption** options, config_array_count_t options_count);
+ConfigSection* createConfigSectionFromLine(const char* line, config_string_size_t line_size);
 
 #endif // _CONFIG_SECTION_H

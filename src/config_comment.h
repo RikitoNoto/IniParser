@@ -3,6 +3,7 @@
 
 #include "config_common.h"
 
+#define CONFIG_COMMENT_CHARACTERS ";"
 
 /**
  * @struct ConfigComment

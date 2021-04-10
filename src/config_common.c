@@ -16,6 +16,12 @@ ConfigStringInfo* createStringInfo(const char* content, config_string_size_t len
     return info;
 }
 
+void freeConfigStringInfo(ConfigStringInfo* info, config_bool is_free_content)
+{
+    if(is_free_content) free(info->content);
+    free(info);
+}
+
 /**
  * @brief search string based on the given characters from a line.
  * @param[in] line a line info.
@@ -25,7 +31,39 @@ ConfigStringInfo* createStringInfo(const char* content, config_string_size_t len
  * search string based on the given characters from a line.
  * if could not find the given characters, return Null.
 */
-ConfigStringInfo* searchStringFromLine(const ConfigStringInfo* line, const ConfigStringInfo* end_chars)
+config_string_size_t searchStringFromLine(const char* line, config_string_size_t line_size, char* end_chars, config_array_count_t end_chars_count)
+{
+    config_bool find_char = CONFIG_FALSE;
+    for(int i = 0; i < line_size; i++)
+    {
+        for(int j=0; j < end_chars_count; j++)
+        {
+            if(line[i] == end_chars[j])
+            {
+                find_char = CONFIG_TRUE;
+                break;
+            }
+        }
+
+        if(find_char)
+        {
+            return i + 1;
+            break;
+        }
+        if(i == line_size-1) return 0;
+    }
+}
+
+/**
+ * @brief search string based on the given characters from a line.
+ * @param[in] line a line info.
+ * @param[in] end_chars end characters. this structure's content is received as char array, but not string.
+ * @return the string infomation searched.
+ * @details
+ * search string based on the given characters from a line.
+ * if could not find the given characters, return Null.
+*/
+ConfigStringInfo* searchStringFromStringInfo(const ConfigStringInfo* line, const ConfigStringInfo* end_chars)
 {
     ConfigStringInfo* info = (ConfigStringInfo*)mallocConfig(sizeof(ConfigStringInfo));
     info->content = line->content;
@@ -45,6 +83,8 @@ ConfigStringInfo* searchStringFromLine(const ConfigStringInfo* line, const Confi
         if(info->length > 0) break;
         if(i==line->length-1) return NULL;
     }
+
+    freeConfigStringInfo(end_chars, CONFIG_TRUE);
     return info;
 }
 
@@ -142,6 +182,25 @@ char* initializeString(const char* srcstr, config_string_size_t size)
     str[size-1] = '\0';
 
     return str;
+}
+
+/**
+ * @brief initialize memory for string.
+ * @param[in] source source string info.
+ * @details
+ * same behavior as initializeString,
+ * but return ConfigStringInfo structure.
+*/
+ConfigStringInfo* initializeStringFromConfigStringInfo(const ConfigStringInfo* source)
+{
+    ConfigStringInfo* init_str = (ConfigStringInfo*)mallocConfig(sizeof(ConfigStringInfo));
+    init_str->length = source->length;
+    init_str->content = (char*)mallocConfig(sizeof(char)*source->length);
+    strncpy(init_str->content, source->content, source->length);
+
+    init_str->content[source->length-1] = '\0';
+    
+    return init_str;
 }
 
 /**
