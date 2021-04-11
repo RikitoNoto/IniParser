@@ -6,6 +6,8 @@ int main(int argc, char* argv[])
     searchSectionTitleTest();
     printf("====create section from line test====\n");
     createConfigSectionFromLineTest();
+    printf("====app end option from line test =====\n");
+    appEndOptionFromLineTest();
 }
 
 static void searchSectionTitleTest()
@@ -78,4 +80,37 @@ static config_bool _createConfigSectionFromLineTest(char* line, config_string_si
 {
     ConfigSection* section = createConfigSectionFromLine(line, line_size);
     return configSectionCmp(section, correct);
+}
+
+static void appEndOptionFromLineTest()
+{
+    char* lines[] = {"test=value", " test = value ", "\"test\"= \"value\"", NULL};
+
+    ConfigOption* options[] = {createConfigOption(0, "test", getStringSizeForTest("test"), "value", getStringSizeForTest("value"), NULL, 0)};
+    ConfigSection* correct = createConfigSection("test", getStringSizeForTest("test"), NULL, 0, options, 1, NULL, 0);
+    config_string_size_t sizes[sizeof(lines)/sizeof(lines[0])];
+    for(int i = 0; i < sizeof(lines)/sizeof(lines[0])-1; i++)
+    {
+        sizes[i] = getStringSizeForTest(lines[i]);
+    }
+
+    for(int i=0;;i++)
+    {
+        if(lines[i] == NULL) break;
+        int result = _appEndOptionFromLineTest(createConfigSectionFromLine("[test]", getStringSizeForTest("[test]")), lines[i], sizes[i], correct);
+        printf(COLOR_CYAN);
+        printf("test%d\n"COLOR_RESET, i);
+
+        printf(COLOR_CYAN"\t<%s == %s>\n", lines[i],correct->title);
+
+        printf(result?COLOR_GREEN:COLOR_RED);
+        printf("\tresult: %s\n"COLOR_RESET, result?"OK":"NG");
+    }
+
+}
+
+static config_bool _appEndOptionFromLineTest(ConfigSection* section, char* line, config_string_size_t line_size, ConfigSection* correct)
+{
+    appEndOptionFromLine(section, line, line_size);
+    return configSectionCmpDeep(section, correct);
 }
