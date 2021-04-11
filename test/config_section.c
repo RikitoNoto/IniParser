@@ -4,6 +4,8 @@ int main(int argc, char* argv[])
 {
     printf("====section title test =====\n");
     searchSectionTitleTest();
+    printf("====create section from line test====\n");
+    createConfigSectionFromLineTest();
 }
 
 static void searchSectionTitleTest()
@@ -40,4 +42,40 @@ config_bool _searchSectionTitleTest(char* correct, char* line, config_string_siz
     strncpy(title, _title, title_size);
     title[title_size - 1] = '\0';
     return !strcmp(correct, title);
+}
+
+static void createConfigSectionFromLineTest()
+{
+    
+    char* lines[] = {"[test]", " [test] ", " [ test ] ", "[ test test ]", NULL};
+    ConfigSection* corrects[] = {
+        createConfigSection("test", getStringSizeForTest("test"), NULL, 0, NULL, 0, NULL, 0),
+        createConfigSection("test", getStringSizeForTest("test"), NULL, 0, NULL, 0, NULL, 0),
+        createConfigSection("test", getStringSizeForTest("test"), NULL, 0, NULL, 0, NULL, 0),
+        createConfigSection("test", getStringSizeForTest("test"), NULL, 0, NULL, 0, NULL, 0)};
+    config_string_size_t sizes[sizeof(lines)/sizeof(lines[0])];
+    for(int i = 0; i < sizeof(corrects)/sizeof(corrects[0]); i++)
+    {
+        sizes[i] = getStringSizeForTest(lines[i]);
+    }
+
+    for(int i=0;;i++)
+    {
+        if(lines[i] == NULL) break;
+        char* dest = (char*)mallocConfig(sizeof(char)*sizes[i]);
+        int result = _createConfigSectionFromLineTest(strncpy(dest, lines[i], sizes[i]), sizes[i], corrects[i]);
+        printf(COLOR_CYAN);
+        printf("test%d\n"COLOR_RESET, i);
+
+        printf(COLOR_CYAN"\t<%s == %s>\n", lines[i],corrects[i]->title);
+
+        printf(result?COLOR_GREEN:COLOR_RED);
+        printf("\tresult: %s\n"COLOR_RESET, result?"OK":"NG");
+    }
+}
+
+static config_bool _createConfigSectionFromLineTest(char* line, config_string_size_t line_size, ConfigSection* correct)
+{
+    ConfigSection* section = createConfigSectionFromLine(line, line_size);
+    return configSectionCmp(section, correct);
 }

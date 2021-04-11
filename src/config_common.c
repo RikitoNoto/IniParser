@@ -178,6 +178,7 @@ void* reallocConfig(void* ptr, size_t size)
 */
 char* initializeString(const char* srcstr, config_string_size_t size)
 {
+    if(size <= 0) return NULL;
     char* str = (char*)mallocConfig(sizeof(char)*size);
     strncpy(str, srcstr, size);
     str[size-1] = '\0';
