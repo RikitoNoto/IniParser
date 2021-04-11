@@ -17,8 +17,8 @@
 */
 ConfigSection* createConfigSection(const char* title, config_string_size_t title_size,
                                     const char* comment, config_string_size_t comment_size,
-                                    ConfigComment** comments, config_array_count_t comments_count,
-                                    ConfigOption** options, config_array_count_t options_count)
+                                    ConfigOption** options, config_array_count_t options_count,
+                                    ConfigComment** comments, config_array_count_t comments_count)
 {
     if(title == NULL) return NULL;
     ConfigSection* section = (ConfigSection*)mallocConfig(sizeof(ConfigSection));
@@ -54,8 +54,8 @@ ConfigSection* createConfigSectionFromLine(const char* line, config_string_size_
     config_string_size_t title_size = 0;
     char* comment = NULL;
     config_string_size_t comment_size = 0;
-    ConfigOption** options = (ConfigOption**)mallocConfig(sizeof(ConfigOption*));
-    ConfigComment** comments = (ConfigComment**)mallocConfig(sizeof(ConfigComment*));
+    ConfigOption** options = NULL;
+    ConfigComment** comments = NULL;
 
 
     title = searchSectionTitle(line, line_size, &title_size);
@@ -89,11 +89,15 @@ config_array_count_t getSectionChildrenCount(ConfigSection* section)
 */
 char* searchSectionTitle(const char* line, config_string_size_t line_size, config_string_size_t* title_size)
 {
-    int delete_size = 0;
+    config_string_size_t delete_size = 0;
     char* title = deleteIndent(line, line_size, &delete_size) + 1;//the return value of deleteIndent is '[', so a next character is used as the title.
     line_size -= delete_size;
+    
+    delete_size = 0;
+    title = deleteIndent(title, line_size, &delete_size);//delete indents after '['.
+    line_size -= delete_size;
 
-    *title_size = searchStringFromLine(title, line_size, "]", 1);
+    *title_size = searchStringFromLine(title, line_size, " ]", 2);
     return title;
 }
 
@@ -185,4 +189,22 @@ ConfigSection* appEndOptionFromLine(ConfigSection* section, char* line, config_s
 {
     addConfigSectionOptionCount(section, 1)->options[section->options_count - 1] = createConfigOptionFromLine(getSectionChildrenCount(section), line, line_size);
     return section;
+}
+
+config_bool configSectionCmp(ConfigSection* section1, ConfigSection* section2)
+{
+    if(strcmp(section1->title, section2->title)) return CONFIG_FALSE;
+    if(section1->title_size != section2->title_size) return CONFIG_FALSE;
+    return CONFIG_TRUE;
+}
+
+config_bool configSectionCmpDeep(ConfigSection* section1, ConfigSection* section2)
+{
+    if(!configSectionCmp(section1, section2)) return CONFIG_FALSE;
+    if(section1->options_count != section2->options_count) return CONFIG_FALSE;
+    for(int i = 0; i < section1->options_count; i++)
+    {
+        if(!configOptionCmp(section1->options[i], section2->options[i])) return CONFIG_FALSE;
+    }
+    return CONFIG_TRUE;
 }

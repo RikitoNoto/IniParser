@@ -1,0 +1,10 @@
+#ifndef _TEST_CONFIG_SECTION_H
+#define _TEST_CONFIG_SECTION_H
+
+#include "config_test.h"
+#include "../src/config_section.h"
+
+static void searchSectionTitleTest();
+config_bool _searchSectionTitleTest(char* correct, char* line, config_string_size_t line_size);
+
+#endif // _TEST_CONFIG_SECTION_H

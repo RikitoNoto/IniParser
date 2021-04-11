@@ -79,16 +79,11 @@ ConfigOption* createConfigOptionFromLine(config_no_in_section_t no, char* _line,
  * @details
  * compare two ConfigOption structures and return the result as boolean.
 */
-config_bool configOptionCmp(const ConfigOption* config_option1, const ConfigOption* config_option2, config_bool comment_check)
+config_bool configOptionCmp(const ConfigOption* config_option1, const ConfigOption* config_option2)
 {
     // if(!(config_option1->no == config_option2->no)) return CONFIG_FALSE;
     if(strcmp(config_option1->title, config_option2->title)) return CONFIG_FALSE;
     if(strcmp(config_option1->value, config_option2->value)) return CONFIG_FALSE;
-
-    if(comment_check)
-    {
-        if(strcmp(config_option1->comment, config_option2->comment)) return CONFIG_FALSE;
-    }
 
     return CONFIG_TRUE;
 }
