@@ -90,3 +90,31 @@ config_bool configCommentCmp(const ConfigComment* config_comment1, const ConfigC
 
     return CONFIG_TRUE;
 }
+
+
+/**
+ * @brief search a comment(';' character) and return that potision.
+ * @param[in] line A line to search.
+ * @param[in] line_size A line to search.
+ * @return bool.
+ * @details
+ * compare two ConfigComment structures and return the result as boolean.
+*/
+char* searchConfigCommentFromLine(char* line, config_string_size_t line_size)
+{
+    config_string_size_t until_comment_size = searchStringFromLine(line, line_size, CONFIG_COMMENT_CHARACTERS, sizeof(CONFIG_COMMENT_CHARACTERS));
+    if(until_comment_size == 0) return NULL;
+    return line + until_comment_size + 1;
+}
+
+/**
+ * @brief free memory of ConfigComment structure.
+ * @param[in] comment ConfigComment structure.
+ * @details
+ * free memory of ConfigComment structure and its members.
+*/
+void freeConfigComment(ConfigComment* comment)
+{
+    free(comment->comment);
+    free(comment);
+}

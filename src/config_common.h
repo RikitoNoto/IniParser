@@ -11,7 +11,6 @@ typedef unsigned char config_bool;
 #define CONFIG_TRUE (char)1
 #define CONFIG_FALSE (char)0
 
-typedef struct _FileVersion FileVersion;
 typedef struct _ConfigFile ConfigFile;
 typedef struct _ConfigSection ConfigSection;
 typedef struct _ConfigOption ConfigOption;
@@ -20,7 +19,17 @@ typedef unsigned int config_string_size_t;
 typedef unsigned int config_array_count_t;
 typedef unsigned int config_no_in_section_t;
 
-char* deleteIndent(char* line, config_string_size_t size, config_string_size_t* delete_size);
+// typedef struct _ConfigStringInfo
+// {
+//     char* content;
+//     config_string_size_t length;
+// } ConfigStringInfo;
+
+// ConfigStringInfo* createStringInfo(const char* content, config_string_size_t length);
+// ConfigStringInfo* searchStringFromStringInfo(const ConfigStringInfo* line, ConfigStringInfo* end_chars);
+config_string_size_t searchStringFromLine(const char* line, config_string_size_t line_size, char* end_chars, config_array_count_t end_chars_count);
+char* deleteIndent(const char* line, config_string_size_t size, config_string_size_t* delete_size);
+// ConfigStringInfo* deleteIndentFromStringInfo(const ConfigStringInfo* line);
 void* mallocConfig(size_t size);
 void* reallocConfig(void *ptr, size_t size);
 char* initializeString(const char* srcstr, config_string_size_t size);

@@ -27,7 +27,7 @@ struct _ConfigOption
 
 ConfigOption* createConfigOption(config_no_in_section_t no, char* title, config_string_size_t title_size, char* value, config_string_size_t value_size, char* comment, config_string_size_t comment_size);
 ConfigOption* createConfigOptionFromLine(config_no_in_section_t no, char* _line, config_string_size_t line_size);
-config_bool configOptionCmp(const ConfigOption* config_option1, const ConfigOption* config_option2, config_bool comment_check);
+config_bool configOptionCmp(const ConfigOption* config_option1, const ConfigOption* config_option2);
 void freeConfigOption(ConfigOption* op);
 
 #if CONFIG_OPTION_STATIC
