@@ -7,6 +7,8 @@
 #include <sys/types.h>
 #include <stdio.h>
 
+#define CONFIG_FILE_TEST 1
+
 struct _ConfigFile
 {
     char* file_name;                                /** file name of this ini file */
@@ -32,5 +34,18 @@ enum ConfigLineType
     CONFIG_EOF
 };
 
+static char* readALine(FILE* file, config_string_size_t* line_size);
+static char* concatBufs(char** bufs, config_array_count_t bufs_size, config_string_size_t* line_size);
+static ConfigFile* getFileStat(ConfigFile* file);
+static ConfigFileVersion* timespecCpy(ConfigFileVersion* time);
+
+#if CONFIG_FILE_TEST
+
+char* _readALine(FILE* file, config_string_size_t* line_size);
+char* _concatBufs(char** bufs, config_array_count_t bufs_size, config_string_size_t* line_size);
+ConfigFile* _getFileStat(ConfigFile* file);
+ConfigFileVersion* _timespecCpy(ConfigFileVersion* time);
+
+#endif
 
 #endif // _CONFIG_FILE_H
