@@ -36,6 +36,7 @@ enum ConfigLineType
 
 static char* readALine(FILE* file, config_string_size_t* line_size);
 static char* concatBufs(char** bufs, config_array_count_t bufs_size, config_string_size_t* line_size);
+static void freeBufs(char** bufs, config_array_count_t bufs_size);
 static ConfigFile* getFileStat(ConfigFile* file);
 static ConfigFileVersion* timespecCpy(ConfigFileVersion* time);
 

@@ -1,28 +1,6 @@
 #include "config_common.h"
 
 /**
- * @brief create string info structure from arguments.
- * @param[in] content A content of this string.
- * @param[in] length The content length.
- * @return A ConfigStringInfo structure made from arguments.
- * @details
- * create ConfigStringInfo structure from arguments.
-*/
-// ConfigStringInfo* createStringInfo(const char* content, config_string_size_t length)
-// {
-//     ConfigStringInfo* info = (ConfigStringInfo*)mallocConfig(sizeof(ConfigStringInfo));
-//     info-> content = initializeString(content, length);
-//     info->length = length;
-//     return info;
-// }
-
-// void freeConfigStringInfo(ConfigStringInfo* info, config_bool is_free_content)
-// {
-//     if(is_free_content) free(info->content);
-//     free(info);
-// }
-
-/**
  * @brief search string based on the given characters from a line.
  * @param[in] line a line info.
  * @param[in] end_chars end characters. this structure's content is received as char array, but not string.
@@ -56,40 +34,6 @@ config_string_size_t searchStringFromLine(const char* line, config_string_size_t
 }
 
 /**
- * @brief search string based on the given characters from a line.
- * @param[in] line a line info.
- * @param[in] end_chars end characters. this structure's content is received as char array, but not string.
- * @return the string infomation searched.
- * @details
- * search string based on the given characters from a line.
- * if could not find the given characters, return Null.
-*/
-// ConfigStringInfo* searchStringFromStringInfo(const ConfigStringInfo* line, ConfigStringInfo* end_chars)
-// {
-//     ConfigStringInfo* info = (ConfigStringInfo*)mallocConfig(sizeof(ConfigStringInfo));
-//     info->content = line->content;
-//     info->length = 0;
-
-//     for(int i = 0; i <line->length; i++)
-//     {
-//         for(int j=0; j < end_chars->length-1; j++)
-//         {
-//             if(line->content[i] == end_chars->content[j])
-//             {
-//                 info->length = i+1;
-//                 break;
-//             }
-//         }
-
-//         if(info->length > 0) break;
-//         if(i==line->length-1) return NULL;
-//     }
-
-//     freeConfigStringInfo(end_chars, CONFIG_TRUE);
-//     return info;
-// }
-
-/**
 * @brief delete indents and spaces from first in a line.
 * @param[in] line a line for delete indents and spaces.
 * @param[out] delete_size count of deleted characters.
@@ -108,31 +52,6 @@ char* deleteIndent(const char* line, config_string_size_t size, config_string_si
     if(*delete_size == size-1) return NULL;
     return line + *delete_size;
 }
-
-/**
-* @brief delete indents and spaces from first in a line.
-* @param[in] line a line for delete indents and spaces.
-* @param[in] size size of a line.
-* @return start point of a line and the size of the remain line.
-* @details
-* delete indents and spaces from first in a line until other characters.
-*/
-// ConfigStringInfo* deleteIndentFromStringInfo(const ConfigStringInfo* line)
-// {
-//     ConfigStringInfo* info = (ConfigStringInfo*)mallocConfig(sizeof(ConfigStringInfo));
-//     for(int i = 0; i < line->length; i++)
-//     {
-//         if(line->content[i] != ' '&& line->content[i] != '\t')
-//         {
-//             info->length = line->length - i;
-//             info->content = line->content[i];
-//             break;
-//         }
-//         if(i == line->length-1) return NULL;
-//     }
-
-//     return info;
-// }
 
 /**
  * @brief allocate memory.
@@ -185,25 +104,6 @@ char* initializeString(const char* srcstr, config_string_size_t size)
 
     return str;
 }
-
-/**
- * @brief initialize memory for string.
- * @param[in] source source string info.
- * @details
- * same behavior as initializeString,
- * but return ConfigStringInfo structure.
-*/
-// ConfigStringInfo* initializeStringFromConfigStringInfo(const ConfigStringInfo* source)
-// {
-//     ConfigStringInfo* init_str = (ConfigStringInfo*)mallocConfig(sizeof(ConfigStringInfo));
-//     init_str->length = source->length;
-//     init_str->content = (char*)mallocConfig(sizeof(char)*source->length);
-//     strncpy(init_str->content, source->content, source->length);
-
-//     init_str->content[source->length-1] = '\0';
-    
-//     return init_str;
-// }
 
 /**
  * @brief raise error and exit program.

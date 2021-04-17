@@ -1,6 +1,6 @@
 #include "config_file.h"
 
-#define INI_FILE_READ_BUFFER_SIZE 1024
+#define INI_FILE_READ_BUFFER_SIZE 10
 
 
 ConfigFile* createConfigFile(const char* file_name)
@@ -10,25 +10,28 @@ ConfigFile* createConfigFile(const char* file_name)
 
 static char* readALine(FILE* file, config_string_size_t* line_size)
 {
+    char* line = NULL;
     char** bufs = mallocConfig(sizeof(char*));
     config_array_count_t bufs_size = 0;
 
     for(int i = 0;; i++)
     {
-        char buf[INI_FILE_READ_BUFFER_SIZE];
-        memset(buf, '\0', sizeof(buf));
+        char* buf = mallocConfig(INI_FILE_READ_BUFFER_SIZE);
+        memset(buf, '\0', INI_FILE_READ_BUFFER_SIZE);
 
+
+        if(fgets(buf, INI_FILE_READ_BUFFER_SIZE, file) == NULL) return NULL;//if read eof, return NULL.
         bufs_size++;
-        bufs = (char**)reallocConfig(bufs, bufs_size);
-
-        if(fgets(buf, sizeof(buf), file) == NULL) return NULL;//if read eof, return NULL.
+        bufs = (char**)reallocConfig(bufs, sizeof(char*) * bufs_size);
         bufs[bufs_size-1] = buf;
 
         char last_char_of_buf = buf[INI_FILE_READ_BUFFER_SIZE - 2];
         if(last_char_of_buf == '\r' || last_char_of_buf == '\n' || last_char_of_buf == '\0') break;
         
     }
-    return concatBufs(bufs, bufs_size, line_size);
+    line = concatBufs(bufs, bufs_size, line_size);
+    freeBufs(bufs, bufs_size);
+    return line;
 }
 
 static char* concatBufs(char** bufs, config_array_count_t bufs_size, config_string_size_t* line_size)
@@ -40,12 +43,21 @@ static char* concatBufs(char** bufs, config_array_count_t bufs_size, config_stri
     {
         for(int j = 0; j < INI_FILE_READ_BUFFER_SIZE; j++)
         {
-            if(bufs[i][j] == '\0') break;
+            if(bufs[i][j] == '\n'|| bufs[i][j] == '\r'|| bufs[i][j] == '\0') break;
             line[(*line_size)++] = bufs[i][j];
         }
     }
-    line[(*line)++] = '\0';
-    return reallocConfig(line, line_size);
+    line[(*line_size)++] = '\0';
+    return reallocConfig(line, sizeof(char) * (*line_size));
+}
+
+static void freeBufs(char** bufs, config_array_count_t bufs_size)
+{
+    for(int i = 0; i < bufs_size; i++)
+    {
+        free(bufs[i]);
+    }
+    free(bufs);
 }
 
 static ConfigFile* getFileStat(ConfigFile* file)
@@ -91,6 +103,6 @@ ConfigFile* _getFileStat(ConfigFile* file)
 
 ConfigFileVersion* _timespecCpy(ConfigFileVersion* time)
 {
-    return time_spec_cpy(time);
+    return timespecCpy(time);
 }
 #endif
