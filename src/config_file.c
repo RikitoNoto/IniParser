@@ -3,11 +3,53 @@
 #define INI_FILE_READ_BUFFER_SIZE 10
 
 
-ConfigFile* createConfigFile(const char* file_name)
+/**
+ * @brief create the ConfigFile structure from the arguments.
+ * @param[in] file_name the file name of the ini file.
+ * @param[in] file_name_size the size of the file name.
+ * @param[in] version the last time of changed this file.
+ * @param[in] file_size the size of this file.
+ * @param[in] sections the sections this file has.
+ * @param[in] sections_size the size of the sections.
+ * @param[in] comments the comments this file has.
+ * @param[in] comments_size the size of the comments.
+ * @return the ConfigFile structure from the arguments.
+ * @details
+ * create the ConfigFile structure from the arguments.
+*/
+ConfigFile* createConfigFile(const char* file_name, config_string_size_t file_name_size,
+                            ConfigFileVersion* version, off_t file_size,
+                            ConfigSection** sections, config_array_count_t sections_size,
+                            ConfigComment** comments, config_array_count_t comments_size)
 {
+    ConfigFile* file = (ConfigFile*)mallocConfig(sizeof(ConfigFile));
+    file->file_name = initializeString(file_name, file_name_size);
+    file->file_name_size = file_name_size;
+    file->version = version;
+    file->file_size = file_size;
+    file->sections = sections;
+    file->sections_size = sections_size;
+    file->comments = comments;
+    file->comments_size = comments_size;
 
+    return file;
 }
 
+void freeConfigFile(ConfigFile* file)
+{
+}
+
+/**
+ * @brief read a line from the ini file stream.
+ * @param[in] file the file stream to read.
+ * @param[out] line_size the size of the line.
+ * @return A line read from the ini file stream.
+ * @details
+ * read a line from the ini file stream and return the line as a string.
+ * this function reads for each 'INI_FILE_READ_BUFFER_SIZE'.
+ * the value of the line_size is the size of the line size and null char.
+ * when a line is "1234", the line_size return 5.
+*/
 static char* readALine(FILE* file, config_string_size_t* line_size)
 {
     char* line = NULL;
@@ -34,6 +76,17 @@ static char* readALine(FILE* file, config_string_size_t* line_size)
     return line;
 }
 
+/**
+ * @brief concat the read buffers from a line.
+ * @param[in] bufs the read buffers.
+ * @param[in] bufs_size the size of the bufs.
+ * @param[out] line_size the size of the line.
+ * @return A line made by concat the bufs.
+ * @details
+ * the readALine function continue reading the size of INI_FILE_READ_BUFFER_SIZE until read '\n' character.
+ * the read strings put into bufs in order.
+ * this function make a string from the bufs.
+*/
 static char* concatBufs(char** bufs, config_array_count_t bufs_size, config_string_size_t* line_size)
 {
     char* line = (char*)mallocConfig(sizeof(char) * INI_FILE_READ_BUFFER_SIZE * bufs_size);
@@ -51,6 +104,14 @@ static char* concatBufs(char** bufs, config_array_count_t bufs_size, config_stri
     return reallocConfig(line, sizeof(char) * (*line_size));
 }
 
+/**
+ * @brief free the bufs that used in the readALine function.
+ * @param[in] bufs the read buffers.
+ * @param[in] bufs_size the size of the bufs.
+ * @return
+ * @details
+ * free the bufs that used in the readALine function.
+*/
 static void freeBufs(char** bufs, config_array_count_t bufs_size)
 {
     for(int i = 0; i < bufs_size; i++)
@@ -67,22 +128,40 @@ static ConfigFile* getFileStat(ConfigFile* file)
     if(stat(file->file_name, &buf) < 0) raiseConfigError(file->file_name, "could not get status.");
     
     file->file_size = buf.st_size;
-    file->version = timespecCpy(&(buf.st_ctime));
+    file->version = buf.st_ctime; //timespecCpy(&(buf.st_ctime));
     
     return file;
 }
 
-static ConfigFileVersion* timespecCpy(ConfigFileVersion* time)
-{
-    ConfigFileVersion* time_spec_cpy = (ConfigFileVersion*)mallocConfig(sizeof(ConfigFileVersion));
-    time_spec_cpy->tv_sec = time->tv_sec;
-    time_spec_cpy->tv_nsec = time->tv_nsec;
-    return time_spec_cpy;
-}
+// static ConfigFileVersion* timespecCpy(ConfigFileVersion* time)
+// {
+//     ConfigFileVersion* time_spec_cpy = (ConfigFileVersion*)mallocConfig(sizeof(ConfigFileVersion));
+//     time_spec_cpy->tv_sec = time->tv_sec;
+//     time_spec_cpy->tv_nsec = time->tv_nsec;
+//     return time_spec_cpy;
+// }
 
 enum ConfigLineType getLineType(char* line, config_string_size_t line_size)
 {
 
+}
+
+config_bool configFileVersionCmp(ConfigFile* file1, ConfigFile* file2)
+{
+    if(file1->file_size != file2->file_size) return CONFIG_FALSE;
+    // else if(file1->version->tv_sec != file2->version->tv_sec) return CONFIG_FALSE;
+    // else if(file1->version->tv_nsec != file2->version->tv_nsec) return CONFIG_FALSE;
+    else if(file1->version != file2->version) return CONFIG_FALSE;
+    return CONFIG_TRUE;
+}
+
+config_bool is_latest_version(ConfigFile* file)
+{
+    ConfigFile* latest_file = createConfigFile(file->file_name, file->file_name_size, NULL, 0, NULL, 0, NULL, 0);
+    getFileStat(latest_file);
+    config_bool result = configFileVersionCmp(file, latest_file);
+    freeConfigFile(latest_file);
+    return result;
 }
 
 #if CONFIG_FILE_TEST
@@ -101,8 +180,9 @@ ConfigFile* _getFileStat(ConfigFile* file)
     return getFileStat(file);
 }
 
-ConfigFileVersion* _timespecCpy(ConfigFileVersion* time)
-{
-    return timespecCpy(time);
-}
+// ConfigFileVersion* _timespecCpy(ConfigFileVersion* time)
+// {
+//     return timespecCpy(time);
+// }
+
 #endif

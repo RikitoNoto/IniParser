@@ -12,10 +12,14 @@
 struct _ConfigFile
 {
     char* file_name;                                /** file name of this ini file */
-    ConfigFileVersion* version;                       /** file version that is written by a structure FileVersion */
+    config_string_size_t file_name_size;            /** the size of this ini file name */
+    // ConfigFileVersion* version;                     /** file version that is written by a structure FileVersion */
+    time_t version;
     off_t file_size;                                /** file size that is got by a system call of stat */
-    ConfigSection** sections;                       /** section array in this ini file */
-    config_array_count_t sections_size;
+    ConfigSection** sections;                       /** the section array in this ini file */
+    config_array_count_t sections_size;             /** the size of the sections array */
+    ConfigComment** comments;                       /** the comment array in this ini file */
+    config_array_count_t comments_size;             /** the size of the comments array */
 };
 /**
  * @struct ConfigFile
@@ -39,6 +43,12 @@ static char* concatBufs(char** bufs, config_array_count_t bufs_size, config_stri
 static void freeBufs(char** bufs, config_array_count_t bufs_size);
 static ConfigFile* getFileStat(ConfigFile* file);
 static ConfigFileVersion* timespecCpy(ConfigFileVersion* time);
+config_bool is_latest_version(ConfigFile* file);
+config_bool configFileVersionCmp(ConfigFile* file1, ConfigFile* file2);
+ConfigFile* createConfigFile(const char* file_name, config_string_size_t file_name_size,
+                            ConfigFileVersion* version, off_t file_size,
+                            ConfigSection** sections, config_array_count_t sections_size,
+                            ConfigComment** comments, config_array_count_t comments_size);
 
 #if CONFIG_FILE_TEST
 

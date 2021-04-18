@@ -8,6 +8,8 @@ int main(int argc, char* argv[])
         exit(1);
     }
     readALineTest(argv[1]);
+    getFileStatTest(argv[1]);
+
 }
 
 static void readALineTest(char* filename)
@@ -38,4 +40,24 @@ static config_bool _readALineTest(FILE* file, char* correct)
     char* line = _readALine(file, &line_size);
     if(getStringSizeForTest(correct) != line_size) return CONFIG_FALSE;
     return !strcmp(line, correct);
+}
+
+static void getFileStatTest(char* filename)
+{
+    ConfigFile* file = createConfigFile(filename, strlen(filename)+1, NULL, 0, NULL, 0, NULL, 0);
+    _getFileStat(file);
+
+    struct stat st;
+    stat(filename, &st);
+    ConfigFile* correct = createConfigFile(filename, strlen(filename)+1, st.st_ctime, st.st_size, NULL, 0, NULL, 0);
+    
+    printf(COLOR_CYAN);
+    printf("test%d\n"COLOR_RESET, 0);
+    printf(COLOR_CYAN);
+
+    printf(COLOR_RESET);
+
+    config_bool result = configFileVersionCmp(file, correct);
+    printf(result?COLOR_GREEN:COLOR_RED);
+    printf("\tresult: %s\n"COLOR_RESET, result?"OK":"NG");
 }
