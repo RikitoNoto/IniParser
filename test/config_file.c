@@ -9,7 +9,7 @@ int main(int argc, char* argv[])
     }
     readALineTest(argv[1]);
     getFileStatTest(argv[1]);
-
+    printf()
 }
 
 static void readALineTest(char* filename)

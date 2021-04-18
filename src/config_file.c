@@ -121,6 +121,13 @@ static void freeBufs(char** bufs, config_array_count_t bufs_size)
     free(bufs);
 }
 
+/**
+ * @brief give the status to a ConfigFile structure.
+ * @param[in] file A ConfigFile structure to give the status.
+ * @return the ConfigFile structure.
+ * @details
+ * give the status of the last change time and the file size to a ConfigFile structure.
+*/
 static ConfigFile* getFileStat(ConfigFile* file)
 {
     struct stat buf;
@@ -146,15 +153,33 @@ enum ConfigLineType getLineType(char* line, config_string_size_t line_size)
 
 }
 
+/**
+ * @brief compare the files version from their last change time and size.
+ * @param[in] file the ConfigFile structures to compare.
+ * @return if the same version, true otherwise false.
+ * @details
+ * compare the files version from their last change time and size.
+*/
 config_bool configFileVersionCmp(ConfigFile* file1, ConfigFile* file2)
 {
     if(file1->file_size != file2->file_size) return CONFIG_FALSE;
+    // TODO: if kernel version is upper 2.5.48, the st_ctime field in a stat structure change a st_ctim field.
     // else if(file1->version->tv_sec != file2->version->tv_sec) return CONFIG_FALSE;
     // else if(file1->version->tv_nsec != file2->version->tv_nsec) return CONFIG_FALSE;
     else if(file1->version != file2->version) return CONFIG_FALSE;
     return CONFIG_TRUE;
 }
 
+/**
+ * @brief check the file version is the latest version.
+ * @param[in] file the ConfigFile structures to check.
+ * @return if the latest version, true otherwise false.
+ * @details
+ * the ConfigFile structure has the infomation of the version.
+ * it is the time of the last changed file and the size of the file.
+ * the ConfigFile structure record the version when make itself.
+ * this function check its version is the latest version.
+*/
 config_bool is_latest_version(ConfigFile* file)
 {
     ConfigFile* latest_file = createConfigFile(file->file_name, file->file_name_size, NULL, 0, NULL, 0, NULL, 0);
@@ -180,6 +205,7 @@ ConfigFile* _getFileStat(ConfigFile* file)
     return getFileStat(file);
 }
 
+// TODO: if kernel version is upper 2.5.48, the st_ctime field in a stat structure change a st_ctim field.
 // ConfigFileVersion* _timespecCpy(ConfigFileVersion* time)
 // {
 //     return timespecCpy(time);
