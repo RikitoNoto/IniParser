@@ -9,6 +9,8 @@
 
 #define CONFIG_FILE_TEST 1
 
+const char* DEFAULT_SECTION_NAME = "DEFAULT";
+
 struct _ConfigFile
 {
     char* file_name;                                /** file name of this ini file */
@@ -18,8 +20,6 @@ struct _ConfigFile
     off_t file_size;                                /** file size that is got by a system call of stat */
     ConfigSection** sections;                       /** the section array in this ini file */
     config_array_count_t sections_size;             /** the size of the sections array */
-    ConfigComment** comments;                       /** the comment array in this ini file */
-    config_array_count_t comments_size;             /** the size of the comments array */
 };
 /**
  * @struct ConfigFile
@@ -35,6 +35,7 @@ enum ConfigLineType
     CONFIG_COMMENT,
     CONFIG_OPTION,
     CONFIG_SECTION_TITLE,
+    CONFIG_UNKNOWN,
     CONFIG_EOF
 };
 
@@ -47,8 +48,7 @@ config_bool is_latest_version(ConfigFile* file);
 config_bool configFileVersionCmp(ConfigFile* file1, ConfigFile* file2);
 ConfigFile* createConfigFile(const char* file_name, config_string_size_t file_name_size,
                             ConfigFileVersion* version, off_t file_size,
-                            ConfigSection** sections, config_array_count_t sections_size,
-                            ConfigComment** comments, config_array_count_t comments_size);
+                            ConfigSection** sections, config_array_count_t sections_size);
 
 #if CONFIG_FILE_TEST
 

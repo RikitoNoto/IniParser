@@ -11,16 +11,13 @@
  * @param[in] file_size the size of this file.
  * @param[in] sections the sections this file has.
  * @param[in] sections_size the size of the sections.
- * @param[in] comments the comments this file has.
- * @param[in] comments_size the size of the comments.
  * @return the ConfigFile structure from the arguments.
  * @details
  * create the ConfigFile structure from the arguments.
 */
 ConfigFile* createConfigFile(const char* file_name, config_string_size_t file_name_size,
                             ConfigFileVersion* version, off_t file_size,
-                            ConfigSection** sections, config_array_count_t sections_size,
-                            ConfigComment** comments, config_array_count_t comments_size)
+                            ConfigSection** sections, config_array_count_t sections_size)
 {
     ConfigFile* file = (ConfigFile*)mallocConfig(sizeof(ConfigFile));
     file->file_name = initializeString(file_name, file_name_size);
@@ -29,14 +26,81 @@ ConfigFile* createConfigFile(const char* file_name, config_string_size_t file_na
     file->file_size = file_size;
     file->sections = sections;
     file->sections_size = sections_size;
-    file->comments = comments;
-    file->comments_size = comments_size;
 
+    return file;
+}
+
+ConfigFile* createConfigFileFromFileName(const char* file_name, config_string_size_t file_name_size)
+{
+    ConfigFile* file = (ConfigFile*)mallocConfig(sizeof(ConfigFile));
+    file->file_name = initializeString(file_name, file_name_size);
+    file->file_name_size = file_name_size;
+    return getFileStat(file);
+}
+
+ConfigFile* readConfigFile(ConfigFile* file)
+{
+    ConfigSection** sections = (ConfigSection**)mallocConfig(sizeof(ConfigSection**));
+    ConfigSection* current_section = createConfigSection(DEFAULT_SECTION_NAME, sizeof(DEFAULT_SECTION_NAME)+1, NULL, 0, NULL, 0, NULL, 0);
+
+    file->sections[file->sections_size++] = current_section;
+    FILE* fd = fopen(file->file_name, "r");
+    config_bool is_eof = CONFIG_FALSE;
+
+    for(;!is_eof;)
+    {
+        config_string_size_t  line_size = 0;
+        char* line = readALine(fd, &line_size);
+        switch(getLineType(line, line_size))
+        {
+            case CONFIG_SECTION_TITLE:
+                current_section = appEndConfigSectionFromLine(file, line, line_size);
+                break;
+
+            case CONFIG_OPTION:
+                appEndOptionFromLine(current_section, line, line_size);
+                break;
+
+            case CONFIG_COMMENT:
+                appEndCommentFromLine(current_section, line, line_size);
+                break;
+            
+            case CONFIG_EOF:
+                is_eof = CONFIG_TRUE;
+                break;
+
+            case CONFIG_UNKNOWN:
+                raiseConfigError(NULL, "unknown error.");
+                break;
+        }
+    }
+
+    return file;
+}
+
+ConfigSection* appEndConfigSectionFromLine(ConfigFile* file, char* line, config_string_size_t line_size)
+{
+    ConfigSection* section = createConfigSection(line, line_size);
+    appEndConfigSection(file)->sections[file->sections_size-1] = section;
+    return section;
+}
+
+ConfigFile* appEndConfigSection(ConfigFile* file)
+{
+    file->sections_size++;
+    reallocConfig(file->sections, file->sections_size);
     return file;
 }
 
 void freeConfigFile(ConfigFile* file)
 {
+    for(int i = 0; i < file->sections_size; i++)
+    {
+        freeConfigSection(file->sections[i]);
+    }
+    free(file->file_name);
+    //free(file->version);
+    free(file);
 }
 
 /**
@@ -150,7 +214,31 @@ static ConfigFile* getFileStat(ConfigFile* file)
 
 enum ConfigLineType getLineType(char* line, config_string_size_t line_size)
 {
+    if(line == NULL) return CONFIG_EOF;
+    config_string_size_t delete_size = 0;
+    return judgeLineTypeFromChar(deleteIndent(line, line_size, &delete_size)[0]);
+}
 
+enum ConfigLineType judgeLineTypeFromChar(char first_char)
+{
+    switch(first_char)
+    {
+        case '\r':
+        case '\n':
+        case ':':
+            return CONFIG_COMMENT;
+
+        case '[':
+            return CONFIG_SECTION_TITLE;
+            
+        case ' ':
+        case '\t':
+            return CONFIG_UNKNOWN;
+
+        default:
+            return CONFIG_OPTION;
+
+    }
 }
 
 /**

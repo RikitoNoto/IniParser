@@ -208,3 +208,20 @@ config_bool configSectionCmpDeep(ConfigSection* section1, ConfigSection* section
     }
     return CONFIG_TRUE;
 }
+
+void freeConfigSection(ConfigSection* section)
+{
+    for(int i = 0; i < section->options_count; i++)
+    {
+        freeConfigOption(section->options[i]);
+    }
+
+    for(int i = 0; i < section->comments_count ;i++)
+    {
+        freeConfigComment(section->comments[i]);
+    }
+
+    free(section->comment);
+    free(section->title);
+    free(section);
+}

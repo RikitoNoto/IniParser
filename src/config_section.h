@@ -37,4 +37,5 @@ ConfigSection* appEndOption(ConfigSection* section, char* op, config_string_size
 ConfigSection* appEndOptionFromLine(ConfigSection* section, char* line, config_string_size_t line_size);
 config_bool configSectionCmp(ConfigSection* section1, ConfigSection* section2);
 config_bool configSectionCmpDeep(ConfigSection* section1, ConfigSection* section2);
+void freeConfigSection(ConfigSection* section);
 #endif // _CONFIG_SECTION_H
