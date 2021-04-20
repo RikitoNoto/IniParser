@@ -2,6 +2,9 @@
 #define _CONFIG_FILE_H
 
 #include "config_common.h"
+#include "config_section.h"
+#include "config_option.h"
+#include "config_comment.h"
 #include <time.h>
 #include <sys/stat.h>
 #include <sys/types.h>
@@ -9,7 +12,6 @@
 
 #define CONFIG_FILE_TEST 1
 
-const char* DEFAULT_SECTION_NAME = "DEFAULT";
 
 struct _ConfigFile
 {
@@ -49,6 +51,13 @@ config_bool configFileVersionCmp(ConfigFile* file1, ConfigFile* file2);
 ConfigFile* createConfigFile(const char* file_name, config_string_size_t file_name_size,
                             ConfigFileVersion* version, off_t file_size,
                             ConfigSection** sections, config_array_count_t sections_size);
+ConfigFile* createConfigFileFromFileName(const char* file_name, config_string_size_t file_name_size);
+ConfigFile* readConfigFile(ConfigFile* file);
+ConfigSection* appEndConfigSectionFromLine(ConfigFile* file, char* line, config_string_size_t line_size);
+ConfigFile* appEndConfigSection(ConfigFile* file);
+void freeConfigFile(ConfigFile* file);
+enum ConfigLineType getLineType(char* line, config_string_size_t line_size);
+enum ConfigLineType judgeLineTypeFromChar(char first_char);
 
 #if CONFIG_FILE_TEST
 

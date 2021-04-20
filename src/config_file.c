@@ -1,6 +1,7 @@
 #include "config_file.h"
 
-#define INI_FILE_READ_BUFFER_SIZE 10
+#define INI_FILE_READ_BUFFER_SIZE 1024
+const char* DEFAULT_SECTION_NAME = "DEFAULT";
 
 
 /**
@@ -32,15 +33,14 @@ ConfigFile* createConfigFile(const char* file_name, config_string_size_t file_na
 
 ConfigFile* createConfigFileFromFileName(const char* file_name, config_string_size_t file_name_size)
 {
-    ConfigFile* file = (ConfigFile*)mallocConfig(sizeof(ConfigFile));
-    file->file_name = initializeString(file_name, file_name_size);
-    file->file_name_size = file_name_size;
+    ConfigFile* file = createConfigFile(file_name, file_name_size, NULL, 0, NULL, 0);
     return getFileStat(file);
 }
 
 ConfigFile* readConfigFile(ConfigFile* file)
 {
-    ConfigSection** sections = (ConfigSection**)mallocConfig(sizeof(ConfigSection**));
+    file->sections = (ConfigSection**)mallocConfig(sizeof(ConfigSection**));
+    file->sections_size = 0;
     ConfigSection* current_section = createConfigSection(DEFAULT_SECTION_NAME, sizeof(DEFAULT_SECTION_NAME)+1, NULL, 0, NULL, 0, NULL, 0);
 
     file->sections[file->sections_size++] = current_section;
@@ -80,7 +80,7 @@ ConfigFile* readConfigFile(ConfigFile* file)
 
 ConfigSection* appEndConfigSectionFromLine(ConfigFile* file, char* line, config_string_size_t line_size)
 {
-    ConfigSection* section = createConfigSection(line, line_size);
+    ConfigSection* section = createConfigSectionFromLine(line, line_size);
     appEndConfigSection(file)->sections[file->sections_size-1] = section;
     return section;
 }
@@ -270,7 +270,7 @@ config_bool configFileVersionCmp(ConfigFile* file1, ConfigFile* file2)
 */
 config_bool is_latest_version(ConfigFile* file)
 {
-    ConfigFile* latest_file = createConfigFile(file->file_name, file->file_name_size, NULL, 0, NULL, 0, NULL, 0);
+    ConfigFile* latest_file = createConfigFile(file->file_name, file->file_name_size, NULL, 0, NULL, 0);
     getFileStat(latest_file);
     config_bool result = configFileVersionCmp(file, latest_file);
     freeConfigFile(latest_file);

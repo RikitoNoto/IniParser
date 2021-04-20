@@ -18,7 +18,7 @@ config_comment_test: $(DIR_BIN)config_comment_test.o $(DIR_BIN)config_comment.o 
 config_section_test: $(DIR_BIN)config_section_test.o $(DIR_BIN)config_section.o $(TEST_COMMONS) $(OP_AND_COMMENT)
 	$(GCC_LINK) $(DIR_BIN)configSectionTest.o $^
 
-config_file_test: $(DIR_BIN)config_file_test.o $(DIR_BIN)config_file.o $(TEST_COMMONS) $(OP_AND_COMMENT)
+config_file_test: $(DIR_BIN)config_file_test.o $(DIR_BIN)config_file.o $(DIR_BIN)config_section.o $(TEST_COMMONS) $(OP_AND_COMMENT)
 	$(GCC_LINK) $(DIR_BIN)configFileTest.o $^
 
 $(DIR_BIN)config_test.o: config_test.h config_test.c
