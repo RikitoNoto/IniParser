@@ -151,7 +151,7 @@ static char* searchOptionTitleFromLine(char* line, config_string_size_t line_siz
             *value_start_point = line + i + 1;
             break;
         }
-        if(i==line_size-1) raiseConfigError(NULL, "invalid context option.\n%s\n", line);
+        if(i==line_size-1) raiseConfigError(__func__, "invalid context option.\n%s\n", line);
     }
     return title;
 }
@@ -222,7 +222,7 @@ static char* searchOptionValueFromLine(char* line, config_string_size_t line_siz
             break;
         }
 
-        if(i == line_size-1) raiseConfigError(NULL, "invalid context option.\n%s\n", line);
+        if(i == line_size-1) raiseConfigError(__func__, "invalid context option.\n%s\n", line);
     }
     return value;
 }

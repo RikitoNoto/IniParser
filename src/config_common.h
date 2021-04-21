@@ -6,6 +6,7 @@
 #include <sys/types.h>
 #include <string.h>
 #include <errno.h>
+#include <time.h>
 
 typedef unsigned char config_bool;
 #define CONFIG_TRUE (char)1
@@ -18,6 +19,7 @@ typedef struct _ConfigComment ConfigComment;
 typedef unsigned int config_string_size_t;
 typedef unsigned int config_array_count_t;
 typedef unsigned int config_no_in_section_t;
+typedef struct timespec ConfigFileVersion;
 
 // typedef struct _ConfigStringInfo
 // {
