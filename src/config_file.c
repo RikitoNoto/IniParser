@@ -12,7 +12,7 @@ const char* DEFAULT_SECTION_NAME = "DEFAULT";
  * @param[in] file_size the size of this file.
  * @param[in] sections the sections this file has.
  * @param[in] sections_size the size of the sections.
- * @return the ConfigFile structure from the arguments.
+ * @return the ConfigFile structure created from the arguments.
  * @details
  * create the ConfigFile structure from the arguments.
 */
@@ -31,14 +31,32 @@ ConfigFile* createConfigFile(const char* file_name, config_string_size_t file_na
     return file;
 }
 
+/**
+ * @brief create the ConfigFile structure from a file name.
+ * @param[in] file_name the file name of the ini file.
+ * @param[in] file_name_size the size of the file name.
+ * @return the ConfigFile structure created from a file name.
+ * @details
+ * create the ConfigFile structure from a file name.
+ * the created ConfigFile structure has no sections.
+*/
 ConfigFile* createConfigFileFromFileName(const char* file_name, config_string_size_t file_name_size)
 {
     ConfigFile* file = createConfigFile(file_name, file_name_size, NULL, 0, NULL, 0);
     return getFileStat(file);
 }
 
+/**
+ * @brief read config file from the structure.
+ * @param[in] file the config file structure for read and update the sections.
+ * @return the received ConfigFile structure.
+ * @details
+ * read config file from the name of ConfigFile structure.
+ * this function write over the received structure's sections.
+*/
 ConfigFile* readConfigFile(ConfigFile* file)
 {
+    if(file->sections != NULL) freeConfigSection(file->sections);
     file->sections = (ConfigSection**)mallocConfig(sizeof(ConfigSection**));
     file->sections_size = 0;
     ConfigSection* current_section = createConfigSection(DEFAULT_SECTION_NAME, sizeof(DEFAULT_SECTION_NAME)+1, NULL, 0, NULL, 0, NULL, 0);
@@ -78,6 +96,15 @@ ConfigFile* readConfigFile(ConfigFile* file)
     return file;
 }
 
+/**
+ * @brief app end a ConfigSection structure from a line.
+ * @param[in] file the config file structure.
+ * @param[in] line the line for add the config section.
+ * @param[in] line_size the size of the line.
+ * @return the created ConfigSection structure.
+ * @details
+ * create the ConfigSection structure from the line and add to the sections of the ConfigFile structure.
+*/
 ConfigSection* appEndConfigSectionFromLine(ConfigFile* file, char* line, config_string_size_t line_size)
 {
     ConfigSection* section = createConfigSectionFromLine(line, line_size);
@@ -85,6 +112,14 @@ ConfigSection* appEndConfigSectionFromLine(ConfigFile* file, char* line, config_
     return section;
 }
 
+/**
+ * @brief add a section space to the ConfigFile structure.
+ * @param[in] file the config file structure.
+ * @return the received ConfigFile structure.
+ * @details
+ * re allocate memory of the sections of the ConfigFile structure.
+ * change the size of the sections to plus one.
+*/
 ConfigFile* appEndConfigSection(ConfigFile* file)
 {
     file->sections_size++;
@@ -92,6 +127,13 @@ ConfigFile* appEndConfigSection(ConfigFile* file)
     return file;
 }
 
+/**
+ * @brief free config file structure.
+ * @param[in] file the config file structure.
+ * @return void.
+ * @details
+ * free the memory of the ConfigFile structure.
+*/
 void freeConfigFile(ConfigFile* file)
 {
     for(int i = 0; i < file->sections_size; i++)
@@ -212,6 +254,15 @@ static ConfigFile* getFileStat(ConfigFile* file)
 //     return time_spec_cpy;
 // }
 
+/**
+ * @brief get the type of the line.
+ * @param[in] line the line to get the type.
+ * @param[in] line_size the size of the line.
+ * @return the type of the line.
+ * @details
+ * get the type of the line.
+ * the types are kind of the line(e.g. section title, option, comment)
+*/
 enum ConfigLineType getLineType(char* line, config_string_size_t line_size)
 {
     if(line == NULL) return CONFIG_EOF;
@@ -219,6 +270,13 @@ enum ConfigLineType getLineType(char* line, config_string_size_t line_size)
     return judgeLineTypeFromChar(deleteIndent(line, line_size, &delete_size)[0]);
 }
 
+/**
+ * @brief judge the line type from the first char of it.
+ * @param[in] first_char a first character of the line.
+ * @return the type of the line.
+ * @details
+ * judge the type of the line from the first char of it.
+*/
 enum ConfigLineType judgeLineTypeFromChar(char first_char)
 {
     switch(first_char)
