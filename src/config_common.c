@@ -64,7 +64,7 @@ char* deleteIndent(const char* line, config_string_size_t size, config_string_si
 void* mallocConfig(size_t size)
 {
     void* ptr = malloc(size);
-    if(ptr == NULL) raiseConfigError(NULL, "Memory allocation failed.");
+    if(ptr == NULL) raiseConfigError(__func__, "Memory allocation failed.");
     return ptr;
 }
 
@@ -80,7 +80,7 @@ void* mallocConfig(size_t size)
 void* reallocConfig(void* ptr, size_t size)
 {
     void* reptr = realloc(ptr, size);
-    if(reptr == NULL) raiseConfigError(NULL, "Memory allocation failed.");
+    if(reptr == NULL) raiseConfigError(__func__, "Memory allocation failed.");
     return reptr;
 }
 
@@ -119,6 +119,7 @@ void raiseConfigError(char* cause, char* fmt, ...)
 
     va_start(ap, fmt);
     if(errno) perror(cause);
+    else fprintf(stderr, "%s:", cause);
     vfprintf(stderr, fmt, ap);
 
     va_end(ap);

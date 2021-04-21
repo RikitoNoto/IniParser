@@ -7,8 +7,8 @@ int main(int argc, char* argv[])
         printf("Usage: %s <filename>", argv[0]);
         exit(1);
     }
-    readALineTest(argv[1]);
-    getFileStatTest(argv[1]);
+    // readALineTest(argv[1]);
+    // getFileStatTest(argv[1]);
     readConfigFileTest(argv[1]);
 }
 

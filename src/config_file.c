@@ -70,7 +70,7 @@ ConfigFile* readConfigFile(ConfigFile* file)
                 break;
 
             case CONFIG_UNKNOWN:
-                raiseConfigError(NULL, "unknown error.");
+                raiseConfigError(__func__, "unknown error.");
                 break;
         }
     }
@@ -225,7 +225,7 @@ enum ConfigLineType judgeLineTypeFromChar(char first_char)
     {
         case '\r':
         case '\n':
-        case ':':
+        case ';':
             return CONFIG_COMMENT;
 
         case '[':
