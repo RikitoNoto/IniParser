@@ -1,4 +1,4 @@
-#include "config_file.h"
+#include "_config_file.h"
 
 #define INI_FILE_READ_BUFFER_SIZE 1024
 const char* DEFAULT_SECTION_NAME = "DEFAULT";

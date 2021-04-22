@@ -1,7 +1,7 @@
-# **What's Ini Paser ?**
+# **What's Ini Parser ?**
 Ini Paser is an API for oparate an ini file.
 
-## **Features of Ini Paser**
+## **Features of Ini Parser**
 This library is made by C language, so very fast.
 
 ## **Install**
@@ -23,7 +23,7 @@ you can read the options and comments from that structure.
 * example.c
 ```C
 #include <stdio.h>
-#include "inipaser.h"
+#include "iniparser.h"
 
 int main(int argc, char* argv[])
 {

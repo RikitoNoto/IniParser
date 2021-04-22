@@ -1,4 +1,4 @@
-#include "config_section.h"
+#include "_config_section.h"
 
 /**
  * @brief create config section structure from title and options, comments.
