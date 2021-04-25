@@ -6,6 +6,5 @@
 #include "config_section.h"
 #include "config_option.h"
 #include "config_comment.h"
-
-ConfigFile* readIniFile(char* filename);
+ConfigFile* readIniFile(const char* filename);
 #endif // _INIPASER_H
